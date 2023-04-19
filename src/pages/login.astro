@@ -1,0 +1,215 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Password Protection">
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <main class="h-screen col-fcc">
+        <body>
+        <div class="container">
+            <div class="form-container">
+                <h2>Login</h2>
+                <form>
+                    <div class="form-group">
+                        <input id="loginNameInput" type="email" name="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input id="loginPasswordInput" type="password" name="password" placeholder="Password">
+                    </div>
+                    <button id="loginSubmitId" type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" class="toggle-form">Register now</a></p>
+            </div>
+
+            <div class="form-container hidden">
+                <h2>Register</h2>
+                <form>
+                    <div class="form-group">
+                        <input id="registerName" type="text" name="name" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <input id="registerEmail" type="email" name="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input id="registerPassword" type="password" name="password" placeholder="Password">
+                    </div>
+                    <button id="registerSubmitId" type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" class="toggle-form">Login now</a></p>
+            </div>
+        </div>
+        </body>
+    </main>
+</Layout>
+
+<!-- 登录提交 -->
+<script>
+    const loginNameInput = document.getElementById('loginNameInput') as HTMLInputElement
+    const loginPasswordInput = document.getElementById('loginPasswordInput')    as    HTMLInputElement
+    const loginSubmitId = document.getElementById('loginSubmitId')    as    HTMLDivElement
+
+    loginSubmitId.onclick = loginSubmit
+    async function loginSubmit() {
+        console.log('登录提交')
+        const username = loginNameInput.value
+        const password = loginPasswordInput.value
+        const response = await fetch('http://127.0.0.1:4523/m1/2596846-0-default/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+        })
+        // console.log('xinxi', username, password, response)
+        console.log(response)
+        const responseJson = await response.json()
+        console.log(responseJson.data)
+        if (responseJson.code.toString().endsWith('0000')) {
+            console.log('登录成功')
+            localStorage.setItem('token', responseJson.data)
+            window.location.href = '/'
+        } else {
+            inputContainer.classList.add('invalid')
+            setTimeout(() => {
+                inputContainer.classList.remove('invalid')
+            }, 300)
+        }
+    }
+</script>
+
+<!-- 注册提交 -->
+<script>
+    const registerName = document.getElementById('registerName') as HTMLInputElement
+    const registerEmail = document.getElementById('registerEmail') as HTMLInputElement
+    const registerPassword = document.getElementById('registerPassword') as HTMLInputElement
+    const registerSubmitId = document.getElementById('registerSubmitId') as HTMLDivElement
+
+    registerSubmitId.onclick = registerSubmit
+
+    async function registerSubmit() {
+        console.log('注册提交')
+        const password = registerPassword.value
+        const response = await fetch('http://127.0.0.1:4523/m1/2596846-0-default/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: registerName.value,
+                email: registerEmail.value,
+                password: password,
+            }),
+        })
+        console.log(response)
+        const responseJson = await response.json()
+        if (responseJson.code.toString().endsWith('0000')) {
+          console.log("注册成功")
+            // localStorage.setItem('token', responseJson.data)
+            // window.location.href = '/'
+        } else {
+            // inputContainer.classList.add('invalid')
+            // setTimeout(() => {
+            //     inputContainer.classList.remove('invalid')
+            // }, 300)
+        }
+    }
+</script>
+
+<!-- 页面切换 -->
+<script>
+    const toggleForms = document.querySelectorAll('.toggle-form');
+    toggleForms.forEach((toggleForm) => {
+        toggleForm.addEventListener('click', () => {
+            const loginForm = document.querySelector('.form-container:nth-of-type(1)');
+            const registerForm = document.querySelector('.form-container:nth-of-type(2)');
+            loginForm.classList.toggle('hidden');
+            registerForm.classList.toggle('hidden');
+        });
+    });
+</script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form-container {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        margin: 0 10px;
+        width: 400px;
+        text-align: center;
+    }
+
+    .form-container h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+    }
+
+    button[type="submit"] {
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #2980b9;
+    }
+
+    p {
+        margin-top: 20px;
+    }
+
+    a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>

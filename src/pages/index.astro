@@ -9,28 +9,85 @@ import 'highlight.js/styles/atom-one-dark.css'
 ---
 
 <Layout title="ChatGPT API Demo">
-  <main >
-    <Header />
-    <Generator client:load />
-    <Footer />
-  </main>
+    <main>
+        <Header/>
+        <Generator client:load/>
+        <Footer/>
+    </main>
 </Layout>
 
 <script>
-async function checkCurrentAuth() {
-  const password = localStorage.getItem('pass')
-  const response = await fetch('/api/auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      pass: password,
-    }),
-  })
-  const responseJson = await response.json()
-  if (responseJson.code !== 0)
-    window.location.href = '/password'
-}
-checkCurrentAuth()
+    async function login() {
+        const username = "wangwu";
+        const password = "wangwu";
+        const token = localStorage.getItem('token')
+        const response = await fetch('http://127.0.0.1:18080/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+        })
+        console.log('password', response)
+        const responseJson = response.json()
+        if (responseJson.code != "0000")
+            window.location.href = '/password'
+    }
+
+    // login()
+
+    async function register() {
+        const username = "wangwu";
+        const password = "wangwu";
+        const token = localStorage.getItem('token')
+        const response = await fetch('http://127.0.0.1:18080/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+        })
+        console.log('password', response)
+        const responseJson = response.json()
+        if (responseJson.code != "0000")
+            window.location.href = '/password'
+    }
+
+    // register()
+
+    async function checkCurrentAuth() {
+        const token = localStorage.getItem('token')
+        // const response = await fetch('http://127.0.0.1:18080/users/auth', {
+        const response = await fetch('http://127.0.0.1:4523/m1/2596846-0-default/test?apifoxApiId=76487357', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            }
+        })
+        const responseJson = await response.json()
+        console.log(responseJson)
+        console.log(responseJson.code)
+        localStorage.setItem('token', responseJson.data)
+        //登录失败-跳转登录
+        if (!responseJson.code.toString().endsWith('0000')) {
+        // if (responseJson.code.toString().endsWith('0000')) {
+            console.log("跳转登录")
+            // window.location.href = '/password'
+            window.location.href = '/login'
+        } else {
+            console.log("校验成功")
+        }
+        //登录成功-首页使用
+    }
+
+    checkCurrentAuth()
 </script>
