@@ -20,7 +20,7 @@ import 'highlight.js/styles/atom-one-dark.css'
     async function login() {
         const username = "wangwu";
         const password = "wangwu";
-        const response = await fetch('http://127.0.0.1:18081/users/login', {
+        const response = await fetch('http://api.fuwenhao.club/users/login', {
             // const response = await fetch('/api/users/login', {
             method: 'POST',
             headers: {
@@ -42,7 +42,7 @@ import 'highlight.js/styles/atom-one-dark.css'
 
     async function checkCurrentAuth() {
         let token = localStorage.getItem('token')
-        const response = await fetch('http://127.0.0.1:18081/users/checkCurrentAuth', {
+        const response = await fetch('http://api.fuwenhao.club/users/checkCurrentAuth', {
         // const response = await fetch(ServerUrl+'/users/checkCurrentAuth', {
             method: 'POST',
             headers: {
