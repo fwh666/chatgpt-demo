@@ -2,11 +2,15 @@
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
     "baseUrl": ".",
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "types": ["vite-plugin-pwa/info"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "types": [
+      "vite-plugin-pwa/info"
+    ],
     "paths": {
-      "@/*": ["src/*"],
-    },
+      "@/*": [
+        "src/*"
+      ]
+    }
   }
 }
